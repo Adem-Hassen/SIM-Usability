@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Data & Outputs
+outputs/
+*.log
+
+# Environment
+.env
+
+# OS
+.DS_Store
