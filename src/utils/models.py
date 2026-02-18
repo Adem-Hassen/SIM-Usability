@@ -5,7 +5,7 @@ class UiPage(BaseModel):
 
     name:str
     code : str
-    accessiblity_tree=List[dict] = Field(default_factory=list)
+    accessibility_tree:Dict 
     screenshots :Optional[bytes] = None
 
 
@@ -18,7 +18,7 @@ class AgentTrace(BaseModel):
     errors:List[str]
 
 
-class CodeFixeProposal(BaseModel):
+class CodeFixProposal(BaseModel):
 
     agent_id:str
     page_name:str
@@ -29,8 +29,8 @@ class CodeFixeProposal(BaseModel):
 class WorkspaceState(BaseModel):
 
     ui_code:Dict[str,str]
-    proposed_fixes=List[CodeFixeProposal]
-    applied_fixes=List[dict]
+    proposed_fixes: List[CodeFixProposal]=Field(default_factory=list)
+    applied_fixes:List[dict]
 
 
 
