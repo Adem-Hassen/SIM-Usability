@@ -6,7 +6,7 @@ class UiPage(BaseModel):
     name:str
     code : str
     accessibility_tree:Dict 
-    screenshots :Dict[str,bytes] = None
+    screenshots :List[bytes] = None
 
 
 

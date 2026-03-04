@@ -204,7 +204,7 @@ def encode_image(image_path):
 
 
 
-def analyze_multiple_screenshots_complexity(
+def analyze_screenshots_complexity(
     screenshots: List[bytes],
     page_names: List[str] = None
 ) -> dict:
@@ -245,21 +245,17 @@ def analyze_multiple_screenshots_complexity(
             )
         )
     
-    # Call VLM
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",  
             contents=content_parts
         )
         
-        # Clean response
         cleaned = re.sub(r'```(?:json)?\s*|\s*```', '', response.text)
         cleaned = cleaned.strip()
         
-        # Parse JSON
         result = json.loads(cleaned)
         
-        # Validate response structure
         if "pages" not in result:
             raise ValueError("VLM response missing 'pages' key")
         
@@ -281,22 +277,11 @@ def analyze_multiple_screenshots_complexity(
         else:
             overall_normalized = 5.0  # Default mid-range
         
-        # Find most and least complex pages
-        most_complex = max(per_page_scores, key=lambda x: x["normalized_score"])
-        least_complex = min(per_page_scores, key=lambda x: x["normalized_score"])
+       
         
         return {
-            "per_page_scores": per_page_scores,
             "overall_normalized_score": overall_normalized,
-            "aggregation_method": "average",
-            "page_count": len(screenshots),
-            "complexity_range": {
-                "min": least_complex["normalized_score"],
-                "max": most_complex["normalized_score"],
-                "spread": most_complex["normalized_score"] - least_complex["normalized_score"]
-            },
-            "most_complex_page": most_complex["page_name"],
-            "least_complex_page": least_complex["page_name"]
+    
         }
     
     except json.JSONDecodeError as e:
@@ -424,11 +409,3 @@ Your JSON response:
 
 
 
-images=[]
-names=[]
-for i in range(0,3) : 
-    images.append(encode_image("examples/sample_ui/test.png")
-)
-    names.append(i)
-
-print(analyze_multiple_screenshots_complexity(images,names))
